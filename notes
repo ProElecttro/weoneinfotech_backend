@@ -1,0 +1,127 @@
+# To Learn:
+    1. How to connect database with node js?
+    2. Database: postgres, mongoDB etc
+    3. operations with databases.
+
+# ORM(Object Relational Mapping):
+    abstration layer over the database drivers to perform operation easily.
+
+    TypeORM: 
+        made for nodeJS, 
+        strong community,
+        highly influenced by other ORMs, such as Hibernate, Doctrine and Entity Framework.
+
+# Requirements:
+    nodeJS with typescript(easy with TS) or JS.
+    Express Framework.
+
+    we will use:
+        (NodeJS + Typescript + Express + TypeORM + Postgres)
+
+        Dependencies:
+            'ts-node': directly executes TS file in node.
+            'nodemon': sees the changes the changes in the app, and automatically restarts the app.
+            'typescript'
+            'express' :  to create end points.
+            'type definations of express': bcoz express is written in JS, helpful to configure express in TS.
+
+# Installing Dependencies:
+    <npm init -y>: to create package.json with default options.
+    <npm i --save-dev ts-node typescript nodemon @types/express>, this installs as development dependencies.
+    <npm i express>
+    <npm i -g typescript>: -> 'tsc' command
+        <tsc --init>: creates 'tsconfig' file, which has all the compiler options of TS.
+
+# OPEN tsconfig.ts:
+    set the root dir(directory having all source files) & out dir(having the compiler js files), root => src, out => dist.
+
+# MAKE a app.ts file in src folder:
+    1. import express.
+    2. create an object instance of express.
+    3. use <express.json()> middleware, to convert the data to the json format which is sent through the post request.
+    4. define port.
+    5. create a end-point.
+    6. start the server with <app.listen>
+
+# GO TO package.json to 'create scripts' 
+    To run the app in Dev mode.
+        <"start:dev" : "nodemon ./src/app.ts">
+    To build the app.(ts files ---> js files)
+        <"build" : "tsc -p .">
+    To start in Production mode.
+        <"start:prod" : "node ./dist/app.js">
+
+CREATE Postgres Database on pgAdmin.
+
+
+# TypeScript Installation
+<!-- https://typeorm.io/ --> 
+
+Install the npm package:
+<npm install typeorm --save>
+
+You need to install reflect-metadata shim:
+<npm install reflect-metadata --save>
+    and import it somewhere in the global place of your app (for example in app.ts):
+        <import "reflect-metadata">
+
+You may need to install node typings:
+<npm install @types/node --save-dev>
+
+Install a database driver:
+    for PostgreSQL or CockroachDB
+    <npm install pg --save>
+
+# TypeScript configuration
+To use decorators:
+    make sure you have enabled the following settings in tsconfig.json:
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+
+# configure Database.
+create a new file called 'config.ts'.
+<import { DataSource } from "typeorm">
+
+const AppDataSource = new DataSource({
+    type: "postgres",
+    host: "localhost",
+    port: 5432,
+    username: "test",
+    password: "test",
+    database: "test",
+    synchronize: true,
+    logging: true,
+    entities: [Post, Category],
+    <!-- subscribers: [], -->
+    <!-- migrations: [], -->
+});
+
+export default AppDataSource;
+
+# initialize the AppDataSource in main file.
+AppDataSource.initialize().then(() => {
+    console.log('Database connected successfully');
+    
+    // start server
+    app.listen(port, ()=>{
+        console.log(`running on port ${port}`);
+    })
+}).catch((err) => {
+    console.log(`Error`, err);
+});
+
+# ORM(Object Relational Mapper):
+    we can handle databases by using oop patterns, 
+    converts oop patterns to sql(difficult to implement).
+
+# HOW ORM Works??
+    we create class(Entity) with the parameters 
+    typeORM reads this class
+    with decorators applied on the class and class parameters, typeORM converts these into SQL. 
+    Then typeORM feeds this SQL to database driver, which executes it into postgres.
+
+# Repository
+    When register the class/Entity into the typeORM, it creates the repository.
+    It works on oop principles.
+    with this repository we can perform CRUD operations.
+        Create, Read, Update & Delete.
